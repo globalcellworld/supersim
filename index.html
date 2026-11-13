@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="SUPERSIM: a SIM card for 9.99 EUR, with data packages that activate on it automatically. For phones with internet but no eSIM.">
+<meta name="description" content="SUPERSIM: a SIM card with data packages that activate on it automatically. For phones with internet but no eSIM.">
 <title>SUPERSIM Shop</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap">
 <style>
@@ -321,9 +321,8 @@ table.t .in { max-width: 120px; }
       <div>
         <p class="eyebrow">Mobile data for every phone</p>
         <h1>Internet for every phone.</h1>
-        <p class="lede">Buy a SUPERSIM card for <span data-sim-price>€9.99</span>, then add a data package. It activates on your SIM automatically after purchase. Packages work in 180+ countries.</p>
+        <p class="lede">Get a SUPERSIM card, then add a data package. It activates on your SIM automatically after purchase. Packages work in 180+ countries.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="#packages">Buy SIM for <span data-sim-price>€9.99</span></a>
           <a class="btn btn-ghost" href="#packages">See packages</a>
         </div>
       </div>
@@ -369,7 +368,7 @@ table.t .in { max-width: 120px; }
         <li class="step-card">
           <span class="n">01</span>
           <h3>Buy your SIM</h3>
-          <p>Order a SUPERSIM card for <span data-sim-price>€9.99</span>. It fits any phone with a SIM slot.</p>
+          <p>Order a SUPERSIM card. It fits any phone with a SIM slot.</p>
         </li>
         <li class="step-card">
           <span class="n">02</span>
@@ -397,47 +396,27 @@ table.t .in { max-width: 120px; }
           <h3>SUPERSIM SIM card</h3>
           <p>One card. Each extra SIM you add is 10% cheaper, up to 50% off.</p>
         </div>
-        <div class="buy">
-          <div class="stepper" role="group" aria-label="Number of SIM cards">
-            <button type="button" class="step" id="sim-minus" aria-label="Remove one SIM">−</button>
-            <output id="sim-qty" aria-live="polite">1</output>
-            <button type="button" class="step" id="sim-plus" aria-label="Add one SIM">+</button>
-          </div>
-          <div class="price-block">
-            <span class="big" id="sim-total">—</span>
-            <span class="sub" id="sim-detail">Loading prices…</span>
-          </div>
-          <button type="button" class="btn btn-primary" id="sim-buy" disabled>Checkout not live yet</button>
-        </div>
       </div>
 
       <div class="pkgs">
         <article class="pkg">
           <span class="size">1 GB</span>
           <span class="days">3 days</span>
-          <p class="price" data-pkg-price="1gb-3d">€1.38</p>
-          <button type="button" class="btn btn-ghost btn-sm" data-pkg-buy="1gb-3d" disabled>Choose</button>
         </article>
         <article class="pkg">
           <span class="size">3 GB</span>
           <span class="days">15 days</span>
-          <p class="price" data-pkg-price="3gb-15d">€3.20</p>
-          <button type="button" class="btn btn-ghost btn-sm" data-pkg-buy="3gb-15d" disabled>Choose</button>
         </article>
         <article class="pkg featured">
           <span class="size">10 GB</span>
           <span class="days">30 days</span>
-          <p class="price" data-pkg-price="10gb-30d">€7.41</p>
-          <button type="button" class="btn btn-primary btn-sm" data-pkg-buy="10gb-30d" disabled>Choose</button>
         </article>
         <article class="pkg">
           <span class="size">50 GB</span>
           <span class="days">45 days</span>
-          <p class="price" data-pkg-price="50gb-45d">€20.00</p>
-          <button type="button" class="btn btn-ghost btn-sm" data-pkg-buy="50gb-45d" disabled>Choose</button>
         </article>
       </div>
-      <p class="pkgs-note">Prices in EUR. Checkout opens when Keepz is connected.</p>
+      <p class="pkgs-note">Prices will be shown when checkout opens.</p>
     </div>
   </section>
 
@@ -451,7 +430,7 @@ table.t .in { max-width: 120px; }
           <p>No. Any phone with a SIM slot works, as long as it is network-unlocked.</p>
         </details>
         <details>
-          <summary>What do I get for <span data-sim-price>€9.99</span>?</summary>
+          <summary>What do I get with the SIM card?</summary>
           <p>A SUPERSIM SIM card. Data packages are bought separately.</p>
         </details>
         <details>
@@ -512,28 +491,8 @@ table.t .in { max-width: 120px; }
 <script>
 (function () {
   "use strict";
-  var SIM_EUR = 9.99, SIM_STEP = 0.10, SIM_MAX = 0.50, SIM_MAX_QTY = 20;
-  var simCents = Math.round(SIM_EUR * 100);
-  var qty = 1;
 
   function $(id) { return document.getElementById(id); }
-  function eur(c) { return "€" + (c / 100).toFixed(2); }
-  function pct(f) { return Math.round(f * 100) + "%"; }
-  function simDiscount(q) { return Math.min(SIM_MAX, SIM_STEP * Math.max(0, q - 1)); }
-  function simUnitCents(p, q) { return Math.round(p * (1 - simDiscount(q))); }
-
-  function renderShop() {
-    var unit = simUnitCents(simCents, qty);
-    var d = simDiscount(qty);
-    $("sim-qty").textContent = String(qty);
-    $("sim-minus").disabled = qty <= 1;
-    $("sim-plus").disabled = qty >= SIM_MAX_QTY;
-    $("sim-total").textContent = eur(unit * qty);
-    $("sim-detail").textContent = d > 0 ? eur(unit) + " each, " + pct(d) + " off" : eur(unit) + " each";
-  }
-
-  $("sim-plus").addEventListener("click", function () { if (qty < SIM_MAX_QTY) { qty += 1; renderShop(); } });
-  $("sim-minus").addEventListener("click", function () { if (qty > 1) { qty -= 1; renderShop(); } });
 
   var copyBtn = $("copy-btn");
   copyBtn.addEventListener("click", function () {
@@ -543,8 +502,6 @@ table.t .in { max-width: 120px; }
         function () { copyBtn.textContent = "Select the address"; });
     } catch (e) { copyBtn.textContent = "Select the address"; }
   });
-
-  renderShop();
 })();
 </script>
 </body>
